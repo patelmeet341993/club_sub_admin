@@ -3,7 +3,9 @@ import 'package:club_model/backend/admin/admin_provider.dart';
 import 'package:club_model/club_model.dart';
 import 'package:club_sub_admin/backend/authentication/authentication_provider.dart';
 import 'package:club_sub_admin/backend/club_operator/club_operator_provider.dart';
+import 'package:club_sub_admin/backend/club_products/club_products_provider.dart';
 import 'package:club_sub_admin/backend/common/menu_provider.dart';
+import 'package:club_sub_admin/backend/photo_gallery/photo_gallery_provider.dart';
 import 'package:flutter/material.dart';
 
 import '../backend/club_backend/club_provider.dart';
@@ -30,6 +32,10 @@ class MyApp extends StatelessWidget {
             create: (_) => AuthenticationProvider(), lazy: false),
         ChangeNotifierProvider<ClubOperatorProvider>(
             create: (_) => ClubOperatorProvider(), lazy: false),
+        ChangeNotifierProvider<PhotoGalleryProvider>(
+            create: (_) => PhotoGalleryProvider(), lazy: false),
+        ChangeNotifierProvider<ClubProductsProvider>(
+            create: (_) => ClubProductsProvider(), lazy: false),
       ],
       child: MainApp(),
     );

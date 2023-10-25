@@ -2,6 +2,7 @@ import 'package:club_model/club_model.dart';
 
 
 class ClubProvider extends CommonProvider{
+
   ClubProvider(){
     loggedInClubModel = CommonProviderPrimitiveParameter<ClubModel?>(
       value:null,
@@ -12,9 +13,11 @@ class ClubProvider extends CommonProvider{
       value:'',
       notify: notify,
     );
+
   }
 
   late CommonProviderPrimitiveParameter<ClubModel?> loggedInClubModel;
   late CommonProviderPrimitiveParameter<String> clubId;
+
 
 }

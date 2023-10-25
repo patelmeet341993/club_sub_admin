@@ -6,9 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../views/authentication/screens/login_screen.dart';
+import '../../views/club_products/screens/club_products.dart';
 import '../../views/homescreen/screens/homescreen.dart';
+import '../../views/photo_gallery/screens/add_photo_gallery.dart';
+import '../../views/photo_gallery/screens/photo_gallery_screeen.dart';
 import '../../views/splash/splash_screen.dart';
 import '../../views/system/screen/system_main_screen.dart';
+import 'navigation_arguments.dart';
 
 class NavigationController {
   static NavigationController? _instance;
@@ -26,6 +30,10 @@ class NavigationController {
   static final GlobalKey<NavigatorState> mainScreenNavigator =
       GlobalKey<NavigatorState>();
   static final GlobalKey<NavigatorState> systemProfileNavigator =
+  GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> photoGalleryScreenNavigator =
+  GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> clubProductsScreenNavigator =
   GlobalKey<NavigatorState>();
 
   // static final GlobalKey<NavigatorState> brandScreenNavigator =
@@ -157,6 +165,83 @@ class NavigationController {
     return null;
   }
 
+  static Route? onPhotoGalleryGeneratedRoutes(RouteSettings settings) {
+    MyPrint.printOnConsole("photo Gallery Generated Routes called for ${settings.name} with arguments:${settings.arguments}");
+
+    if (kIsWeb) {
+      if (!["/", SplashScreen.routeName].contains(settings.name) && NavigationController.checkDataAndNavigateToSplashScreen()) {
+        return null;
+      }
+    }
+
+    MyPrint.printOnConsole("First Page:$isFirst");
+    Widget? page;
+
+    switch (settings.name) {
+      case "/":
+        {
+          page = const PhotoGalleryScreen();
+          break;
+        }
+
+      case AddPhotoGalleryScreen.routeName:
+        {
+          page = parseAddPhotoGalleryScreen(settings: settings);
+          break;
+        }
+    }
+
+    if (page != null) {
+      return PageRouteBuilder(
+        pageBuilder: (c, a1, a2) => page!,
+        //transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+        transitionsBuilder: (c, anim, a2, child) => SizeTransition(sizeFactor: anim, child: child),
+        transitionDuration: const Duration(milliseconds: 0),
+        settings: settings,
+      );
+    }
+    return null;
+  }
+
+  static Route? onClubProductsRoutes(RouteSettings settings) {
+    MyPrint.printOnConsole("photo Gallery Generated Routes called for ${settings.name} with arguments:${settings.arguments}");
+
+    if (kIsWeb) {
+      if (!["/", SplashScreen.routeName].contains(settings.name) && NavigationController.checkDataAndNavigateToSplashScreen()) {
+        return null;
+      }
+    }
+
+    MyPrint.printOnConsole("First Page:$isFirst");
+    Widget? page;
+
+    switch (settings.name) {
+      case "/":
+        {
+          page = const ClubProductsListScreen();
+          break;
+        }
+
+      // case AddPhotoGalleryScreen.routeName:
+      //   {
+      //     page = parseAddPhotoGalleryScreen(settings: settings);
+      //     break;
+      //   }
+    }
+
+    if (page != null) {
+      return PageRouteBuilder(
+        pageBuilder: (c, a1, a2) => page!,
+        //transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+        transitionsBuilder: (c, anim, a2, child) => SizeTransition(sizeFactor: anim, child: child),
+        transitionDuration: const Duration(milliseconds: 0),
+        settings: settings,
+      );
+    }
+    return null;
+  }
+
+
 
 /*
   static Route? onBrandGeneratedRoutes(RouteSettings settings) {
@@ -211,6 +296,17 @@ class NavigationController {
     return HomeScreen();
   }
 
+  static Widget? parseAddPhotoGalleryScreen({required RouteSettings settings}) {
+    if (settings.arguments is AddPhotoGalleryNavigationArguments) {
+      AddPhotoGalleryNavigationArguments arguments = settings.arguments as AddPhotoGalleryNavigationArguments;
+      return AddPhotoGalleryScreen(
+        arguments: arguments,
+      );
+    } else {
+      return null;
+    }
+  }
+
 
 /*  static Widget? parseAddBannerScreen({required RouteSettings settings}) {
     if (settings.arguments is AddBannerScreenNavigationArguments) {
@@ -241,6 +337,18 @@ class NavigationController {
         navigationOperationParameters: navigationOperationParameters.copyWith(
       routeName: HomeScreen.routeName,
     ));
+  }
+
+  static Future<dynamic> navigateToAddPhotoGalleryScreen({
+    required NavigationOperationParameters navigationOperationParameters,
+    required AddPhotoGalleryNavigationArguments addPhotoGalleryScreenNavigationArguments,
+  }) {
+    return NavigationOperation.navigate(
+      navigationOperationParameters: navigationOperationParameters.copyWith(
+        routeName: AddPhotoGalleryScreen.routeName,
+        arguments: addPhotoGalleryScreenNavigationArguments,
+      ),
+    );
   }
 
 

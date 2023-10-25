@@ -32,5 +32,22 @@ class ClubOperatorController{
 
   }
 
+  Future<ClubOperatorModel?> getClubOperatorFromId(String clubOperatorId) async {
+    try {
+      ClubOperatorModel? model;
+      MyFirestoreDocumentSnapshot snapshot = await FirebaseNodes.clubOperatorDocumentReference(clubOperatorId: clubOperatorId).get();
+      if(snapshot.exists && snapshot.data().checkNotEmpty){
+        model = ClubOperatorModel.fromMap(snapshot.data()!);
+      }
+      clubOperatorProvider.clubOperatorId.set(value: model?.id ?? '');
+      clubOperatorProvider.loggedInClubOperatorModel.set(value: model);
+      return model;
+    } catch (e, s) {
+      MyPrint.printOnConsole(
+          'Error in getClubFromId in Club Controller $e');
+      MyPrint.printOnConsole(s);
+    }
+  }
+
 
   }

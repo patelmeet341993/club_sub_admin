@@ -1,4 +1,5 @@
 import 'package:club_model/club_model.dart';
+import 'package:club_sub_admin/models/edit_club_request_model.dart';
 
 class ClubRepository {
   Future<List<ClubModel>> getClubListRepo() async {
@@ -24,6 +25,11 @@ class ClubRepository {
     }
 
     return clubList;
+  }
+
+  Future<void> editClubRepo(EditClubRequestModel editClubRequestModel) async {
+    await FirebaseNodes.clubDocumentReference(clubId: editClubRequestModel.id)
+        .update(EditClubRequestModel().toMap());
   }
 
  /* Future<List<ClubUserModel>> getClubUserListRepo() async {

@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:club_sub_admin/backend/club_backend/club_provider.dart';
+import 'package:club_sub_admin/models/edit_club_request_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:club_model/club_model.dart';
@@ -7,6 +9,7 @@ import 'package:club_model/view/common/components/common_text.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../backend/club_backend/club_controller.dart';
 import '../../../backend/common/cloudinary_manager.dart';
 import '../../common/components/common_button.dart';
 import '../../common/components/common_image_view_box.dart';
@@ -24,15 +27,15 @@ class ClubProfileScreen extends StatefulWidget {
 class _ClubProfileScreenState extends State<ClubProfileScreen> {
 
   final _formKey = GlobalKey<FormState>();
-  late Future<void> futureGetData;
+  late Future<bool> futureGetData;
   bool isLoading = false;
   ClubModel? clubModel;
+  late ClubController clubController;
+  late ClubProvider clubProvider;
 
   TextEditingController clubNameController = TextEditingController();
   TextEditingController mobileNumberController = TextEditingController();
   TextEditingController clubAddressController = TextEditingController();
-  TextEditingController userIdController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
 
   final ImagePicker _picker = ImagePicker();
   String? thumbnailImageUrl;
@@ -112,64 +115,73 @@ class _ClubProfileScreenState extends State<ClubProfileScreen> {
     }
 
 
-  /*
-    if (widget.arguments.clubModel != null && widget.arguments.index != null && widget.arguments.isEdit == true) {
-      MyPrint.printOnConsole("club model edit this with index: ${widget.arguments.index} edit: ${widget.arguments.isEdit}");
-      ClubModel clubModel = ClubModel(
-        id: widget.arguments.clubModel!.id,
-        name: clubNameController.text.trim(),
-        address: clubAddressController.text.trim(),
-        mobileNumber: mobileNumberController.text.trim(),
-        thumbnailImageUrl: cloudinaryThumbnailImageUrl.isNotEmpty ? cloudinaryThumbnailImageUrl : widget.arguments.clubModel!.thumbnailImageUrl,
-        createdTime: widget.arguments.clubModel!.createdTime,
-        adminEnabled: isAdminEnabled,
-        clubUsersList: pageClubOperatorModel != null ? [pageClubOperatorModel!.id] : null,
-        userRoles: pageClubOperatorModel != null ? {pageClubOperatorModel!.id : ClubOperatorRoles.owner} : null,
-        coverImages: methodCoverImages,
-        updatedTime: Timestamp.now(),
-      );
-      await clubController.AddClubToFirebase(clubModel,isEdit: true);
-      if (context.mounted && context.checkMounted()) {
-        MyToast.showSuccess(context: context, msg: 'Club Updated successfully');
-      }
-    }
-  */
+    EditClubRequestModel editClubRequestModel = EditClubRequestModel(
+
+    );
+
+    await clubController.updateClubModelToFirebase(editClubRequestModel);
 
   }
 
-  Future<void> getData() async {
+  Future<bool> getData() async {
+
+    ClubModel? clubModel = clubProvider.loggedInClubModel.get();
+
+    if(clubModel == null && clubProvider.clubId.get().isNotEmpty){
+      clubModel = await clubController.getClubFromId(clubProvider.clubId.get());
+    }
+
+    if(clubModel == null){
+      return false;
+    }
+
+    clubNameController.text = clubModel.name;
+    mobileNumberController.text = clubModel.mobileNumber;
+    clubAddressController.text = clubModel.address;
+    thumbnailImageUrl = clubModel.thumbnailImageUrl;
+    clubCoverImages.addAll(clubModel.coverImages);
+
+
+    return true;
+
 
   }
 
   @override
   void initState() {
     super.initState();
+    clubProvider = context.read<ClubProvider>();
+    clubController = ClubController(clubProvider: clubProvider);
     futureGetData =  getData();
   }
 
   @override
   Widget build(BuildContext context)  {
-    return FutureBuilder(
+    return FutureBuilder<bool>(
         future: futureGetData,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Scaffold(
-              backgroundColor: Styles.bgColor,
-              body: ModalProgressHUD(
-                inAsyncCall: isLoading,
-                child: Column(
-                  children: [
-                    HeaderWidget(
-                      title: "Edit Club Profile",
-                    ),
-                    Expanded(child: getMainWidget()),
-                  ],
-                ),
-              ),
-            );
-          } else {
+          if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: LoadingWidget());
           }
+
+          if (snapshot.data != true) {
+            return  Center(child: CommonText(text: 'No Club Data Available',fontSize: 25,fontWeight: FontWeight.w600,));
+          }
+
+          return Scaffold(
+            backgroundColor: Styles.bgColor,
+            body: ModalProgressHUD(
+              inAsyncCall: isLoading,
+              child: Column(
+                children: [
+                  HeaderWidget(
+                    title: "Edit Club Profile",
+                  ),
+                  getMainWidget(),
+                ],
+              ),
+            ),
+          );
         });
   }
 

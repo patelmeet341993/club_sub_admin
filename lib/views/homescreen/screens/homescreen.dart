@@ -1,11 +1,13 @@
 
 import 'package:club_model/club_model.dart';
+import 'package:club_sub_admin/views/photo_gallery/screens/photo_gallery_screeen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../backend/authentication/authentication_provider.dart';
 import '../../../backend/club_backend/club_provider.dart';
 import '../../../backend/common/menu_provider.dart';
+import '../../club_products/screens/club_products.dart';
 import '../../club_profile/screen/club_profile_screen.dart';
 import '../../common/components/app_response.dart';
 import '../../common/components/side_bar.dart';
@@ -44,11 +46,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               DrawerListTile(
+                title: "Club Images Gallery",
+                icon: Icons.account_box_outlined,
+                press: () {
+                  setState(() {
+                    tabNumber = 1;
+                  });
+                },
+              ),
+              DrawerListTile(
+                title: "Club Products",
+                icon: Icons.account_box_outlined,
+                press: () {
+                  setState(() {
+                    tabNumber = 2;
+                  });
+                },
+              ),
+              DrawerListTile(
                 title: "System",
                 icon: Icons.branding_watermark,
                 press: () {
                   setState(() {
-                    tabNumber = 1;
+                    tabNumber = 3;
                   });
                 },
               ),
@@ -75,11 +95,29 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                         ),
                         DrawerListTile(
+                          title: "Club Images Gallery",
+                          icon: Icons.image_outlined,
+                          press: () {
+                            setState(() {
+                              tabNumber = 1;
+                            });
+                          },
+                        ),
+                        DrawerListTile(
+                          title: "Club Products",
+                          icon: Icons.account_box_outlined,
+                          press: () {
+                            setState(() {
+                              tabNumber = 2;
+                            });
+                          },
+                        ),
+                        DrawerListTile(
                           title: "System",
                           icon: Icons.branding_watermark,
                           press: () {
                             setState(() {
-                              tabNumber = 1;
+                              tabNumber = 3;
                             });
                           },
                         ),
@@ -115,12 +153,16 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       case 1:
         {
+          return const PhotoGalleryScreenNavigator();
+        }
+      case 2:
+        {
+          return const ClubProductsListScreenNavigator();
+        }
+      case 3:
+        {
           return const SystemScreenNavigator();
         }
-      // case 2:
-      //   {
-      //     return const BrandListScreenNavigator();
-      //   }
       // case 3:
       //   {
       //     return const UserScreenNavigator();

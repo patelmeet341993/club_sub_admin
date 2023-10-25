@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:club_model/club_model.dart';
 import 'package:club_model/utils/my_print.dart';
 import 'package:club_sub_admin/backend/club_backend/club_provider.dart';
+import 'package:club_sub_admin/models/edit_club_request_model.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../configs/constants.dart';
@@ -60,4 +61,22 @@ class ClubController {
 
     return imageUrl;
   }
+
+  Future<void> updateClubModelToFirebase(EditClubRequestModel editClubRequestModel) async {
+    try {
+      await clubRepository.editClubRepo(editClubRequestModel);
+      if(clubProvider.loggedInClubModel.get() == null){
+        return;
+      }
+
+      clubProvider.loggedInClubModel.get()!.name = editClubRequestModel.name;
+
+    } catch (e, s) {
+      MyPrint.printOnConsole(
+          'Error in Add Club Operator to Firebase in Club Controller $e');
+      MyPrint.printOnConsole(s);
+    }
+  }
+
+
 }

@@ -61,6 +61,8 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool(MySharePreferenceKeys.isLogin, true);
+      prefs.setString(MySharePreferenceKeys.linkedClubId, clubId ?? '');
+      prefs.setString(MySharePreferenceKeys.operatorId, operatorModel.id);
     } else {
       if (context.mounted && context.checkMounted()) {
         MyToast.showError(context: context, msg: "No User found for this ID");
