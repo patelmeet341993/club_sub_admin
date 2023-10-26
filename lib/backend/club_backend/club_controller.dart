@@ -7,7 +7,6 @@ import 'package:club_sub_admin/backend/club_backend/club_provider.dart';
 import 'package:club_sub_admin/models/edit_club_request_model.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../configs/constants.dart';
 import 'club_repository.dart';
 
 class ClubController {
@@ -70,6 +69,12 @@ class ClubController {
       }
 
       clubProvider.loggedInClubModel.get()!.name = editClubRequestModel.name;
+      clubProvider.loggedInClubModel.get()!.mobileNumber = editClubRequestModel.mobileNumber;
+      clubProvider.loggedInClubModel.get()!.createdTime = editClubRequestModel.createdTime;
+      clubProvider.loggedInClubModel.get()!.updatedTime = editClubRequestModel.updatedTime;
+      clubProvider.loggedInClubModel.get()!.address = editClubRequestModel.address;
+      clubProvider.loggedInClubModel.get()!.thumbnailImageUrl = editClubRequestModel.thumbnailImageUrl;
+      clubProvider.loggedInClubModel.get()!.coverImages = editClubRequestModel.coverImages;
 
     } catch (e, s) {
       MyPrint.printOnConsole(

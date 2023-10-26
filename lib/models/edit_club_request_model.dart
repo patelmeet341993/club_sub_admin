@@ -12,7 +12,6 @@ class EditClubRequestModel {
   String mobileNumber = "";
   String address = "";
   List<String> coverImages = <String>[];
-  List<GallerySection> galleryImages = <GallerySection>[];
   Timestamp? createdTime;
   Timestamp? updatedTime;
   LocationModel? location;
@@ -24,13 +23,11 @@ class EditClubRequestModel {
     this.mobileNumber = "",
     this.address = "",
     List<String>? coverImages,
-    List<GallerySection>? galleryImages,
     this.createdTime,
     this.updatedTime,
     this.location,
   }) {
     this.coverImages = coverImages ?? <String>[];
-    this.galleryImages = galleryImages ?? <GallerySection>[];
   }
 
   EditClubRequestModel.fromMap(Map<String, dynamic> map) {
@@ -51,11 +48,6 @@ class EditClubRequestModel {
     createdTime = ParsingHelper.parseTimestampMethod(map['createdTime']);
     updatedTime = ParsingHelper.parseTimestampMethod(map['updatedTime']);
 
-    List<Map<String,dynamic >> galleryImagesList = ParsingHelper.parseMapsListMethod(map['galleryImages']);
-    galleryImages = galleryImagesList.map((e){
-      return GallerySection.fromMap(e);
-    }).toList();
-
 
     location = null;
     Map<String, dynamic> locationMap = ParsingHelper.parseMapMethod<dynamic, dynamic, String, dynamic>(map['location']);
@@ -72,7 +64,6 @@ class EditClubRequestModel {
       "mobileNumber" : mobileNumber,
       "address" : address,
       "coverImages" : coverImages,
-      "galleryImages" : galleryImages.map((e) => e.toMap(toJson: toJson)).toList(),
       "createdTime" : toJson ? createdTime?.toDate().millisecondsSinceEpoch : createdTime,
       "updatedTime" : toJson ? updatedTime?.toDate().millisecondsSinceEpoch : updatedTime,
       "location" : location?.toMap(toJson: toJson),

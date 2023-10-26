@@ -83,7 +83,6 @@ class _ClubProfileScreenState extends State<ClubProfileScreen> {
     setState(() {
       isLoading = true;
     });
-    String newId = MyUtils.getNewId(isFromUUuid: false);
     String cloudinaryThumbnailImageUrl = '';
 
     if (thumbnailImage != null) {
@@ -105,6 +104,7 @@ class _ClubProfileScreenState extends State<ClubProfileScreen> {
     for (var element in coverImagesToDeleteList) {
       await  CloudinaryManager().deleteImagesFromCloudinary(images: [element]);
     }
+
     MyPrint.printOnConsole("Club Cover Images Length: ${clubCoverImages.length}");
 
     List<String> methodCoverImages = [];
@@ -116,35 +116,41 @@ class _ClubProfileScreenState extends State<ClubProfileScreen> {
 
 
     EditClubRequestModel editClubRequestModel = EditClubRequestModel(
-
+      id: clubModel!.id,
+      updatedTime: Timestamp.now(),
+      createdTime: clubModel!.createdTime,
+      name: clubNameController.text,
+      mobileNumber: mobileNumberController.text,
+      address: clubAddressController.text,
+      thumbnailImageUrl: cloudinaryThumbnailImageUrl.isNotEmpty? cloudinaryThumbnailImageUrl : clubModel!.thumbnailImageUrl,
+      coverImages: methodCoverImages,
     );
 
     await clubController.updateClubModelToFirebase(editClubRequestModel);
 
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future<bool> getData() async {
+    clubModel = clubProvider.loggedInClubModel.get();
 
-    ClubModel? clubModel = clubProvider.loggedInClubModel.get();
-
-    if(clubModel == null && clubProvider.clubId.get().isNotEmpty){
+    if (clubModel == null && clubProvider.clubId.get().isNotEmpty) {
       clubModel = await clubController.getClubFromId(clubProvider.clubId.get());
     }
 
-    if(clubModel == null){
+    if (clubModel == null) {
       return false;
     }
 
-    clubNameController.text = clubModel.name;
-    mobileNumberController.text = clubModel.mobileNumber;
-    clubAddressController.text = clubModel.address;
-    thumbnailImageUrl = clubModel.thumbnailImageUrl;
-    clubCoverImages.addAll(clubModel.coverImages);
-
+    clubNameController.text = clubModel!.name;
+    mobileNumberController.text = clubModel!.mobileNumber;
+    clubAddressController.text = clubModel!.address;
+    thumbnailImageUrl = clubModel!.thumbnailImageUrl;
+    clubCoverImages.addAll(clubModel!.coverImages);
 
     return true;
-
-
   }
 
   @override
@@ -172,13 +178,16 @@ class _ClubProfileScreenState extends State<ClubProfileScreen> {
             backgroundColor: Styles.bgColor,
             body: ModalProgressHUD(
               inAsyncCall: isLoading,
-              child: Column(
-                children: [
-                  HeaderWidget(
-                    title: "Edit Club Profile",
-                  ),
-                  getMainWidget(),
-                ],
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    HeaderWidget(
+                      title: "Edit Club Profile",
+                    ),
+                    getMainWidget(),
+                  ],
+                ),
               ),
             ),
           );
@@ -328,7 +337,7 @@ class _ClubProfileScreenState extends State<ClubProfileScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         getTitle(title: "Choose Club Thumbnail Image*"),
-        thumbnailImage == null && thumbnailImageUrl == null && (thumbnailImageUrl?.isEmpty ?? true)
+        thumbnailImage == null && (thumbnailImageUrl?.isEmpty ?? true)
             ? InkWell(
             onTap: () async {
               await addThumbnailImage();
@@ -410,7 +419,7 @@ class _ClubProfileScreenState extends State<ClubProfileScreen> {
               return;
             }
             await addClub();
-            Navigator.pop(context);
+            // Navigator.pop(context);
           }
         },
         text: 'Update Club Profile');

@@ -8,22 +8,36 @@ class PhotoGalleryController {
 
   PhotoGalleryController({required this.photoGalleryProvider});
 
-  Future<void> addPhotoGalleryFirebase(GallerySection gallerySection,String clubId,{bool isEdit = false}) async {
+  Future<void> addPhotoGalleryFirebase(GallerySection gallerySection,String clubId,{bool isEdit = false,int? index}) async {
     try {
     await FirebaseNodes.clubDocumentReference(clubId: clubId)
         .update({'galleryImages.${gallerySection.id}' :  gallerySection.toMap()});
-      // if(!isEdit) photoGalleryProvider.clubOperatorList.insertAtIndex(index: 0, model: clubOperatorModel);
+      if(isEdit){
+        List<GallerySection> galleryList = photoGalleryProvider.photoGalleryModelList.getList().where((element){
+          if(element.id == gallerySection.id){
+            return true;
+          }
+          return false;
+        }).toList();
+
+        GallerySection? methodGallerySection = galleryList.firstOrNull;
+        if(methodGallerySection != null){
+          methodGallerySection.updateFromMap(gallerySection.toMap());
+        }
+      }else{
+        photoGalleryProvider.photoGalleryModelList.setList(list: [gallerySection],isClear: false);
+      }
     } catch (e, s) {
       MyPrint.printOnConsole('Error in Add Club Operator to Firebase in Club Controller $e');
       MyPrint.printOnConsole(s);
     }
   }
 
-  Future<void> removePhotoGalleryFirebase(GallerySection gallerySection,String clubId,{bool isEdit = false}) async {
+  Future<void> removePhotoGalleryFirebase(GallerySection gallerySection,String clubId) async {
     try {
     await FirebaseNodes.clubDocumentReference(clubId: clubId)
         .update({'galleryImages.${gallerySection.id}' : FieldValue.delete()});
-      // if(!isEdit) photoGalleryProvider.clubOperatorList.insertAtIndex(index: 0, model: clubOperatorModel);
+    photoGalleryProvider.photoGalleryModelList.removeObject(model: gallerySection);
     } catch (e, s) {
       MyPrint.printOnConsole('Error in Add Club Operator to Firebase in Club Controller $e');
       MyPrint.printOnConsole(s);

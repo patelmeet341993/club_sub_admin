@@ -16,7 +16,7 @@ import '../../common/components/get_title.dart';
 import '../../common/components/header_widget.dart';
 
 class AddPhotoGalleryScreen extends StatefulWidget {
-  static const String routeName = "/addphotogallery";
+  static const String routeName = "/AddPhotoGalleryScreen";
   final AddPhotoGalleryNavigationArguments arguments;
 
   const AddPhotoGalleryScreen({super.key, required this.arguments});
@@ -100,7 +100,7 @@ class _AddPhotoGalleryScreenState extends State<AddPhotoGalleryScreen> with MySa
         sectionName:sectionNameController.text.trim(),
       );
 
-      await photoGalleryController.addPhotoGalleryFirebase(gallerySection,clubId);
+      await photoGalleryController.addPhotoGalleryFirebase(gallerySection,clubId,isEdit: true);
 
     }else{
       GallerySection gallerySection = GallerySection(
@@ -110,7 +110,7 @@ class _AddPhotoGalleryScreenState extends State<AddPhotoGalleryScreen> with MySa
         sectionName:sectionNameController.text.trim(),
       );
 
-      await photoGalleryController.addPhotoGalleryFirebase(gallerySection,clubId);
+      await photoGalleryController.addPhotoGalleryFirebase(gallerySection,clubId,isEdit: false);
 
     }
 

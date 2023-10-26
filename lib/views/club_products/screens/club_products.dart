@@ -113,41 +113,39 @@ class _ClubProductsListScreenState extends State<ClubProductsListScreen> with My
                       suffixWidget: Row(
                         children: [
                           CommonButton(
-                              text: "+ Exclusive Product",
+                              text: "Exclusive Product",
                               icon: Icon(
                                 Icons.add,
                                 color: Styles.white,
                               ),
                               onTap: () {
-                                // BuildContext? context = NavigationController.clubScreenNavigator.currentContext;
-                                // if(context == null) return;
-                                // NavigationController.navigateToAddClubScreen(
-                                //   navigationOperationParameters: NavigationOperationParameters(
-                                //     navigationType: NavigationType.pushNamed,
-                                //     context: context,
-                                //   ),
-                                //   addClubScreenNavigationArguments: AddClubScreenNavigationArguments(),
-                                // );
+                                BuildContext? context = NavigationController.clubProductsScreenNavigator.currentContext;
+                                if(context == null) return;
+                                NavigationController.navigateToAddClubExclusiveProducts(
+                                  navigationOperationParameters: NavigationOperationParameters(
+                                    navigationType: NavigationType.pushNamed,
+                                    context: context,
+                                  ),
+                                );
                               }),
                           SizedBox(
                             width: 15,
                           ),
                           CommonButton(
-                              text: "+ Product",
+                              text: "Product",
                               icon: Icon(
                                 Icons.add,
                                 color: Styles.white,
                               ),
                               onTap: () {
-                                // BuildContext? context = NavigationController.clubScreenNavigator.currentContext;
-                                // if(context == null) return;
-                                // NavigationController.navigateToAddClubScreen(
-                                //   navigationOperationParameters: NavigationOperationParameters(
-                                //     navigationType: NavigationType.pushNamed,
-                                //     context: context,
-                                //   ),
-                                //   addClubScreenNavigationArguments: AddClubScreenNavigationArguments(),
-                                // );
+                                BuildContext? context = NavigationController.clubProductsScreenNavigator.currentContext;
+                                if(context == null) return;
+                                NavigationController.navigateToAddClubProducts(
+                                  navigationOperationParameters: NavigationOperationParameters(
+                                    navigationType: NavigationType.pushNamed,
+                                    context: context,
+                                  ),
+                                );
                               }),
                         ],
                       ),

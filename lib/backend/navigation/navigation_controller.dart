@@ -1,11 +1,13 @@
 import 'package:club_model/backend/navigation/navigation_operation.dart';
 import 'package:club_model/backend/navigation/navigation_operation_parameters.dart';
 import 'package:club_model/utils/my_print.dart';
+import 'package:club_sub_admin/views/club_products/screens/add_club_products.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../views/authentication/screens/login_screen.dart';
+import '../../views/club_products/screens/add_club_exclusive_products.dart';
 import '../../views/club_products/screens/club_products.dart';
 import '../../views/homescreen/screens/homescreen.dart';
 import '../../views/photo_gallery/screens/add_photo_gallery.dart';
@@ -222,11 +224,17 @@ class NavigationController {
           break;
         }
 
-      // case AddPhotoGalleryScreen.routeName:
-      //   {
-      //     page = parseAddPhotoGalleryScreen(settings: settings);
-      //     break;
-      //   }
+      case AddClubExclusiveProducts.routeName:
+        {
+          page = parseAddClubExclusiveProducts(settings: settings);
+          break;
+        }
+
+      case AddClubProducts.routeName:
+        {
+          page = parseAddClubProducts(settings: settings);
+          break;
+        }
     }
 
     if (page != null) {
@@ -296,6 +304,14 @@ class NavigationController {
     return HomeScreen();
   }
 
+  static Widget? parseAddClubProducts({required RouteSettings settings}) {
+    return AddClubProducts();
+  }
+
+  static Widget? parseAddClubExclusiveProducts({required RouteSettings settings}) {
+    return AddClubExclusiveProducts();
+  }
+
   static Widget? parseAddPhotoGalleryScreen({required RouteSettings settings}) {
     if (settings.arguments is AddPhotoGalleryNavigationArguments) {
       AddPhotoGalleryNavigationArguments arguments = settings.arguments as AddPhotoGalleryNavigationArguments;
@@ -336,6 +352,22 @@ class NavigationController {
     return NavigationOperation.navigate(
         navigationOperationParameters: navigationOperationParameters.copyWith(
       routeName: HomeScreen.routeName,
+    ));
+  }
+
+  static Future<dynamic> navigateToAddClubExclusiveProducts(
+      {required NavigationOperationParameters navigationOperationParameters}) {
+    return NavigationOperation.navigate(
+        navigationOperationParameters: navigationOperationParameters.copyWith(
+      routeName: AddClubExclusiveProducts.routeName,
+    ));
+  }
+
+  static Future<dynamic> navigateToAddClubProducts(
+      {required NavigationOperationParameters navigationOperationParameters}) {
+    return NavigationOperation.navigate(
+        navigationOperationParameters: navigationOperationParameters.copyWith(
+      routeName: AddClubProducts.routeName,
     ));
   }
 
